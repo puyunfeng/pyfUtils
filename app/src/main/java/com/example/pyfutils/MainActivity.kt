@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.example.utils.ThreadUtlis
+import com.example.utils.TimeUtils
 
 class MainActivity : AppCompatActivity() {
 
@@ -11,5 +12,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Log.d("当前线程","主线程="+ThreadUtlis.getInstance().isMainThread)
+        Log.d("当前时间=",TimeUtils.getInstance().getData("yyyy-MM-dd HH:mm:ss"))
+        Log.d("当前时间=",TimeUtils.getInstance().time.toString()+"")
+        Log.d("当前时间=",TimeUtils.getInstance().getTime("2019.11.11 12:12","yyyy.MM.dd HH:mm").toString())
     }
 }
