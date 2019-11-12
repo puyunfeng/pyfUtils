@@ -15,5 +15,9 @@ class MainActivity : AppCompatActivity() {
         Log.d("当前时间=",TimeUtils.getInstance().getData("yyyy-MM-dd HH:mm:ss"))
         Log.d("当前时间=",TimeUtils.getInstance().time.toString()+"")
         Log.d("当前时间=",TimeUtils.getInstance().getTime("2019.11.11 12:12","yyyy.MM.dd HH:mm").toString())
+        Log.d("当前时间=",TimeUtils.getInstance().getCalendarBoundT("yyyy-MM-dd HH:mm:ss"))
+        Log.d("当前时间=",TimeUtils.getInstance().getCalendarBoundB("yyyy-MM-dd HH:mm:ss"))
+
+
     }
 }

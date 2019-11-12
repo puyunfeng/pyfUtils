@@ -1,6 +1,7 @@
 package com.example.utils;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class TimeUtils {
@@ -44,21 +45,76 @@ public class TimeUtils {
 
     /**
      * 获取指定格式的时间
-     * @param mDate data对象
-     * @param mTimeFormat  时间格式 yyyy-MM-dd HH:mm:ss
+     *
+     * @param mDate       data对象
+     * @param mTimeFormat 时间格式 yyyy-MM-dd HH:mm:ss
      * @return
      */
     public String getData(Date mDate, String mTimeFormat) {
         String date = new SimpleDateFormat(mTimeFormat).format(mDate);
         return date;
     }
+
     /**
      * 获取当前指定格式的时间
-     * @param mTimeFormat  时间格式 yyyy-MM-dd HH:mm:ss
+     *
+     * @param mTimeFormat 时间格式 yyyy-MM-dd HH:mm:ss
      * @return
      */
     public String getData(String mTimeFormat) {
-        return getData(new Date(),mTimeFormat);
+        return getData(new Date(), mTimeFormat);
+    }
+
+    /**
+     * 时间戳转换成指定格式的数据
+     *
+     * @param timestamp   时间戳
+     * @param mTimeFormat 指定格式 yyyy-MM-dd HH:mm:ss
+     * @return
+     */
+    public String getData(long timestamp, String mTimeFormat) {
+        return getData(time2Date(timestamp), mTimeFormat);
+    }
+
+    /**
+     * 时间戳转换成Date
+     *
+     * @param timestamp
+     * @return
+     */
+    public Date time2Date(long timestamp) {
+        return new Date(timestamp * 1000);
+    }
+
+    /**
+     * 获取今天00：00时间的方法
+     * 获取一天零界点的时间（上边界）
+     *
+     * @param mTimeFormat 指定格式 yyyy-MM-dd HH:mm:ss
+     * @return
+     */
+    public String getCalendarBoundT(String mTimeFormat) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        return getData(calendar.getTimeInMillis() / 1000, mTimeFormat);
+    }
+
+    /**
+     * 获取今天23:59时间的方法
+     * 获取一天零界点的时间（下边界）
+     *
+     * @param mTimeFormat 指定格式 yyyy-MM-dd HH:mm:ss
+     * @return
+     */
+    public String getCalendarBoundB(String mTimeFormat) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        long mNextTime = calendar.getTimeInMillis() / 1000 + (24 * 60 * 60 - 1);
+        return getData(mNextTime, mTimeFormat);
     }
 
 }
