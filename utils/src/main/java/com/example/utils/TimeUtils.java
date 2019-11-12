@@ -24,7 +24,7 @@ public class TimeUtils {
      *
      * @param mDateStr    时间 2019-11-11 12:12
      * @param mTimeFormat 时间格式 yyyy-MM-dd HH:mm
-     * @return
+     * @return 时间戳
      */
     public long getTime(String mDateStr, String mTimeFormat) {
         Date date = null;
@@ -115,6 +115,35 @@ public class TimeUtils {
         calendar.set(Calendar.SECOND, 0);
         long mNextTime = calendar.getTimeInMillis() / 1000 + (24 * 60 * 60 - 1);
         return getData(mNextTime, mTimeFormat);
+    }
+    /**
+     * 获取今天00：00时间的方法
+     * 获取一天零界点的时间（上边界）
+     *
+     * @param mTimeFormat 指定格式 yyyy-MM-dd HH:mm:ss
+     * @return 时间戳
+     */
+    public long getTimeBoundT(String mTimeFormat) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        return getTime(getData(calendar.getTimeInMillis() / 1000, mTimeFormat),mTimeFormat);
+    }
+    /**
+     * 获取今天23:59时间的方法
+     * 获取一天零界点的时间（下边界）
+     *
+     * @param mTimeFormat 指定格式 yyyy-MM-dd HH:mm:ss
+     * @return 时间戳
+     */
+    public long getTimeBoundB(String mTimeFormat) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        long mNextTime = calendar.getTimeInMillis() / 1000 + (24 * 60 * 60 - 1);
+        return getTime(getData(mNextTime, mTimeFormat),mTimeFormat);
     }
 
 }
