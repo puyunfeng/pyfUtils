@@ -35,4 +35,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     //Toast
     api 'com.hjq:toast:8.0'
+    //rxjava     优化意见 可不集成rxjava
+    api "io.reactivex.rxjava2:rxjava:2.2.6"
+    api 'io.reactivex.rxjava2:rxandroid:2.1.1'
 }
