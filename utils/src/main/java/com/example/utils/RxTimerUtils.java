@@ -70,6 +70,40 @@ public class RxTimerUtils {
     }
 
     /**
+     * 每隔milliseconds毫秒后执行next操作
+     * @param delay 第一次延迟时间
+     * @param milliseconds 周期
+     * @param next 结果回调
+     */
+    public void interval(long delay,long milliseconds, final IRxNext next) {
+        Observable.interval(delay,milliseconds, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Long>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable disposable) {
+                        Log.d(TAG, "onSubscribe: ");
+                        mDisposableList.add(disposable);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Long number) {
+                        if (next != null) {
+                            next.doNext(number);
+                        }
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+    /**
      * 取消订阅
      */
     public void cancelAll() {
