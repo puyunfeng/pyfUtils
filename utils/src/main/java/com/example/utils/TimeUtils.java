@@ -166,11 +166,19 @@ public class TimeUtils {
         hour = (mDifTimestamp / (60 * 60 * 1000) - day * 24);
         min = ((mDifTimestamp / (60 * 1000)) - day * 24 * 60 - hour * 60);
         sec = (mDifTimestamp/1000-day*24*60*60-hour*60*60-min*60);
-        hashMap.put("day",day+"");
-        hashMap.put("hour",hour+"");
-        hashMap.put("min",min+"");
-        hashMap.put("sec",sec+"");
+        get2BitData(day, hashMap);
+        get2BitData(hour, hashMap);
+        get2BitData(min, hashMap);
+        get2BitData(sec, hashMap);
         return hashMap;
+    }
+
+    private void get2BitData(long hour, HashMap<String, String> hashMap) {
+        if (hour < 10) {
+            hashMap.put("day", "0" + hour);
+        } else {
+            hashMap.put("day", hour + "");
+        }
     }
 
 }
