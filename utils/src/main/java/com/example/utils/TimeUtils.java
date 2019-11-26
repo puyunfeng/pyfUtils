@@ -3,6 +3,7 @@ package com.example.utils;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 public class TimeUtils {
     private static class TimeUtilsHolder {
@@ -116,6 +117,7 @@ public class TimeUtils {
         long mNextTime = calendar.getTimeInMillis() / 1000 + (24 * 60 * 60 - 1);
         return getData(mNextTime, mTimeFormat);
     }
+
     /**
      * 获取今天00：00时间的方法
      * 获取一天零界点的时间（上边界）
@@ -128,8 +130,9 @@ public class TimeUtils {
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
-        return getTime(getData(calendar.getTimeInMillis() / 1000, mTimeFormat),mTimeFormat);
+        return getTime(getData(calendar.getTimeInMillis() / 1000, mTimeFormat), mTimeFormat);
     }
+
     /**
      * 获取今天23:59时间的方法
      * 获取一天零界点的时间（下边界）
@@ -143,7 +146,31 @@ public class TimeUtils {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         long mNextTime = calendar.getTimeInMillis() / 1000 + (24 * 60 * 60 - 1);
-        return getTime(getData(mNextTime, mTimeFormat),mTimeFormat);
+        return getTime(getData(mNextTime, mTimeFormat), mTimeFormat);
+    }
+
+    /**
+     * 差值时间戳换算成时分秒（基于毫秒）
+     *
+     * @param mDifTimestamp
+     * @return
+     */
+    public HashMap<String,String> getDiffDate(long mDifTimestamp) {
+        long day = 0;
+        long hour = 0;
+        long min = 0;
+        long sec = 0;
+        String flag;
+        HashMap<String,String> hashMap=new HashMap<>();
+        day = mDifTimestamp / (24 * 60 * 60 * 1000);
+        hour = (mDifTimestamp / (60 * 60 * 1000) - day * 24);
+        min = ((mDifTimestamp / (60 * 1000)) - day * 24 * 60 - hour * 60);
+        sec = (mDifTimestamp/1000-day*24*60*60-hour*60*60-min*60);
+        hashMap.put("day",day+"");
+        hashMap.put("hour",hour+"");
+        hashMap.put("min",min+"");
+        hashMap.put("sec",sec+"");
+        return hashMap;
     }
 
 }

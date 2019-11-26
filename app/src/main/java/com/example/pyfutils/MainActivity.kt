@@ -20,5 +20,7 @@ class MainActivity : AppCompatActivity() {
         Log.d("当前时间=",TimeUtils.getInstance().getCalendarBoundB("yyyy-MM-dd HH:mm:ss"))
         Log.d("当前时间=",TimeUtils.getInstance().getTimeBoundT("yyyy-MM-dd HH:mm:ss").toString())
         Log.d("当前时间=",TimeUtils.getInstance().getTimeBoundB("yyyy-MM-dd HH:mm:ss").toString())
+        var time= TimeUtils.getInstance().getDiffDate(TimeUtils.getInstance().getTime()-(TimeUtils.getInstance().getTime()-1000*5))
+
     }
 }
