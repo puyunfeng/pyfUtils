@@ -173,11 +173,11 @@ public class TimeUtils {
         return hashMap;
     }
 
-    private void get2BitData(long hour, HashMap<String, String> hashMap) {
-        if (hour < 10) {
-            hashMap.put("day", "0" + hour);
+    private void get2BitData(long mTag, HashMap<String, String> hashMap) {
+        if (mTag < 10) {
+            hashMap.put(""+mTag+"", "0" + mTag);
         } else {
-            hashMap.put("day", hour + "");
+            hashMap.put(""+mTag+"", mTag + "");
         }
     }
 
