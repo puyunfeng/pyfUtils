@@ -3,6 +3,7 @@ package com.example.utils;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -103,6 +104,35 @@ public class RxTimerUtils {
                     }
                 });
     }
+    HashMap<String,Disposable> hashMap=new HashMap<>();
+    public void interval(long milliseconds, final IRxNext next, final String mTag) {
+        Observable.interval(milliseconds, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Long>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable disposable) {
+                        Log.d(TAG, "onSubscribe: ");
+                        hashMap.put(mTag,disposable);
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Long number) {
+                        if (next != null) {
+                            next.doNext(number);
+                        }
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
     /**
      * 取消订阅
      */
@@ -112,8 +142,28 @@ public class RxTimerUtils {
                 disposable.dispose();
                 Log.d(TAG, "cancelAll");
             }
+            mDisposableList.clear();
+        }
+        if (hashMap.keySet()!=null) {
+            for (String key : hashMap.keySet()) {
+                Disposable  disposable=  hashMap.get(key);
+                disposable.dispose();
+                hashMap.remove(key);
+            }
         }
     }
+    /**
+     * 取消指定订阅
+     */
+    public void cancelTarget(String mTag) {
+        if (hashMap.get(mTag)!=null) {
+            Disposable  disposable=  hashMap.get(mTag);
+            disposable.dispose();
+            Log.d(TAG, "cancel"+mTag);
+            hashMap.remove(mTag);
+        }
+    }
+
 
     public interface IRxNext {
         void doNext(long number);
