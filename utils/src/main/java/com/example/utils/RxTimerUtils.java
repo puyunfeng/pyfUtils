@@ -147,7 +147,9 @@ public class RxTimerUtils {
         if (hashMap.keySet()!=null) {
             for (String key : hashMap.keySet()) {
                 Disposable  disposable=  hashMap.get(key);
-                disposable.dispose();
+                if(!disposable.isDisposed()){
+                    disposable.dispose();
+                }
                 hashMap.remove(key);
             }
         }
@@ -158,7 +160,9 @@ public class RxTimerUtils {
     public void cancelTarget(String mTag) {
         if (hashMap.get(mTag)!=null) {
             Disposable  disposable=  hashMap.get(mTag);
-            disposable.dispose();
+            if(!disposable.isDisposed()){
+                disposable.dispose();
+            }
             Log.d(TAG, "cancel"+mTag);
             hashMap.remove(mTag);
         }
