@@ -39,7 +39,7 @@ public class LruUtils {
             //取于本地
             return SpUtils.getInstance().getString(context, username, null);
         } else {
-            return null;
+            return mDataHash.get(username);
         }
     }
 }
