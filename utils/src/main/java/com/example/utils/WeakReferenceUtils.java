@@ -10,6 +10,8 @@ import java.lang.ref.WeakReference;
 public class WeakReferenceUtils {
     private WeakReference<Context> reference = null;
     private WeakReference<Activity> reference_a = null;
+    private WeakReference<AppCompatActivity> referenceAppCompat = null;
+
 
     private static class ObjectUtilsHolder {
         private static final WeakReferenceUtils INSTANCE = new WeakReferenceUtils();
@@ -31,5 +33,9 @@ public class WeakReferenceUtils {
     public Activity getContext(Activity mActivity) {
         reference_a = new WeakReference<>(mActivity);
         return reference_a.get();
+    }
+    public AppCompatActivity getContext(AppCompatActivity mActivity) {
+        referenceAppCompat = new WeakReference<>(mActivity);
+        return referenceAppCompat.get();
     }
 }
