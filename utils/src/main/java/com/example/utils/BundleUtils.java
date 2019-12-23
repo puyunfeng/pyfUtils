@@ -30,5 +30,12 @@ public class BundleUtils {
         Bundle bundle = mActivity.getIntent().getExtras();
         return  bundle.getParcelable(key);
     }
-
+    public int getInt(Activity mActivity, String key) {
+        Bundle bundle = mActivity.getIntent().getExtras();
+        return  bundle.getInt(key);
+    }
+    public String getString(Activity mActivity, String key) {
+        Bundle bundle = mActivity.getIntent().getExtras();
+        return  bundle.getString(key);
+    }
 }
