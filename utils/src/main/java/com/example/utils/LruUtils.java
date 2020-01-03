@@ -30,16 +30,16 @@ public class LruUtils {
         //保存于内存中
         mDataHash.put(key, value);
         //保存于本地
-        SpUtils.getInstance().putString(context, key, key);
+        SpUtils.getInstance().putString(context, key, value);
     }
 
-    public String getData(Context context, String username) {
+    public String getData(Context context, String key) {
         //取于内存中
-        if (mDataHash.get(username) == null) {
+        if (mDataHash.get(key) == null) {
             //取于本地
-            return SpUtils.getInstance().getString(context, username, null);
+            return SpUtils.getInstance().getString(context, key, null);
         } else {
-            return mDataHash.get(username);
+            return mDataHash.get(key);
         }
     }
 }
