@@ -142,8 +142,8 @@ public class RxTimerUtils {
                 disposable.dispose();
                 Log.d(TAG, "cancelAll");
             }
-            mDisposableList.clear();
         }
+        mDisposableList.clear();
         if (hashMap.keySet()!=null) {
             for (String key : hashMap.keySet()) {
                 Disposable  disposable=  hashMap.get(key);

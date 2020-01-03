@@ -22,15 +22,15 @@ public class LruUtils {
     /**
      *
      * @param context
-     * @param username
-     * @param userName_login
+     * @param key
+     * @param value
      */
     // TODO: 2019/11/15 采用Lru算法优化
-    public void saveData(Context context, String username, String userName_login) {
+    public void saveData(Context context, String key, String value) {
         //保存于内存中
-        mDataHash.put(username, userName_login);
+        mDataHash.put(key, value);
         //保存于本地
-        SpUtils.getInstance().putString(context, username, userName_login);
+        SpUtils.getInstance().putString(context, key, key);
     }
 
     public String getData(Context context, String username) {
