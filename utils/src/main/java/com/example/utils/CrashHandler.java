@@ -14,7 +14,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     private static final String TAG = "CrashHandler";
     private static final boolean DEBUG = true;
     //文件路径
-    private static final String PATH = Environment.getExternalStorageDirectory().getPath() + File.separator + "crash";
+    private static  String PATH = Environment.getExternalStorageDirectory().getPath() + File.separator + "crash";
     private static final String FILE_NAME = "crash";
     private static final String FILE_NAME_SUFEIX = ".trace";
     private static Thread.UncaughtExceptionHandler mDefaultCrashHandler;
@@ -29,6 +29,12 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     }
 
     public void init(Context context) {
+        mDefaultCrashHandler = Thread.getDefaultUncaughtExceptionHandler();
+        Thread.setDefaultUncaughtExceptionHandler(this);
+        mContext = context.getApplicationContext();
+    }
+    public void init(Context context,String path) {
+        PATH=path;
         mDefaultCrashHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
         mContext = context.getApplicationContext();
@@ -99,7 +105,10 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     }
 
     //将异常写入文件
-    private void writeToSDcard(Throwable ex) throws IOException, PackageManager.NameNotFoundException {
+    private void
+
+
+    writeToSDcard(Throwable ex) throws IOException, PackageManager.NameNotFoundException {
         //如果没有SD卡，直接返回
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             return;
