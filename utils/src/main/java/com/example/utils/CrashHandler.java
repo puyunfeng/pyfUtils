@@ -124,7 +124,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             }
         }
     }
-    void setOverUpload(String fileName,boolean isok){
+   public void setOverUpload(String fileName,boolean isok){
         SpUtils.getInstance().putBoolean(mContext,fileName,isok);
     }
 
@@ -141,10 +141,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     }
 
     //将异常写入文件
-    private void
-
-
-    writeToSDcard(Throwable ex) throws IOException, PackageManager.NameNotFoundException {
+    private void writeToSDcard(Throwable ex) throws IOException, PackageManager.NameNotFoundException {
         //如果没有SD卡，直接返回
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             return;
