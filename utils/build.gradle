@@ -42,4 +42,6 @@ dependencies {
     api 'com.orhanobut:logger:2.2.0'
     //网络检测参考链接https://github.com/sunyatas/NetStatusBus  minSdkVersion 21
     api 'com.sunchen:netstatusbus:0.1.5'
+
+    implementation 'org.apache.httpcomponents:httpcore:4.4.4'
 }
