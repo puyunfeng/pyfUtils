@@ -59,15 +59,12 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                         String filePath = file.getAbsolutePath();//获取文件路径
                         String fileName = file.getName().substring(0,_name.length()-4);//获取文件名
                         //该日志文件是否上传
-                        String isUpload=SpUtils.getInstance().getString(mContext,_name,"");
-                        if (!TextUtils.isEmpty(isUpload)) {
                             //上传
                             if (iReportEx!=null) {
                                 if (!SpUtils.getInstance().getBoolean(mContext,_name,true)) {
                                     iReportEx.report2Server(_name, FileUtils.getInstance().readFileSdcardFile(filePath));
                                 }
                             }
-                        }
                     }
                 }
             }
@@ -124,10 +121,12 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             }
         }
     }
-   public void setOverUpload(String fileName,boolean isok){
-        SpUtils.getInstance().putBoolean(mContext,fileName,isok);
+   public void uploadReady(String fileName){
+        SpUtils.getInstance().putBoolean(mContext,fileName,false);
     }
-
+    public void uploadFinish(String fileName){
+        SpUtils.getInstance().putBoolean(mContext,fileName,true);
+    }
     public static String exception(Throwable t) throws IOException {
         if (t == null)
             return null;
