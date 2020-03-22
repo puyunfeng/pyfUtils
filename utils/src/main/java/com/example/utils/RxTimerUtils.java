@@ -143,21 +143,25 @@ public class RxTimerUtils {
      * 取消订阅
      */
     public void cancelAll() {
-        for (Disposable disposable : mDisposableList) {
-            if (disposable != null && !disposable.isDisposed()) {
-                disposable.dispose();
-                Log.d(TAG, "cancelAll");
-            }
-        }
-        mDisposableList.clear();
-        if (hashMap.keySet() != null) {
-            for (String key : hashMap.keySet()) {
-                Disposable disposable = hashMap.get(key);
-                if (!disposable.isDisposed()) {
+        try {
+            for (Disposable disposable : mDisposableList) {
+                if (disposable != null && !disposable.isDisposed()) {
                     disposable.dispose();
+                    Log.d(TAG, "cancelAll");
                 }
-                hashMap.remove(key);
             }
+            mDisposableList.clear();
+            if (hashMap.keySet() != null) {
+                for (String key : hashMap.keySet()) {
+                    Disposable disposable = hashMap.get(key);
+                    if (!disposable.isDisposed()) {
+                        disposable.dispose();
+                    }
+                    hashMap.remove(key);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -165,13 +169,17 @@ public class RxTimerUtils {
      * 取消指定订阅
      */
     public void cancelTarget(String mTag) {
-        if (hashMap.get(mTag) != null) {
-            Disposable disposable = hashMap.get(mTag);
-            if (!disposable.isDisposed()) {
-                disposable.dispose();
+        try {
+            if (hashMap.get(mTag) != null) {
+                Disposable disposable = hashMap.get(mTag);
+                if (!disposable.isDisposed()) {
+                    disposable.dispose();
+                }
+                Log.d(TAG, "cancel" + mTag);
+                hashMap.remove(mTag);
             }
-            Log.d(TAG, "cancel" + mTag);
-            hashMap.remove(mTag);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
