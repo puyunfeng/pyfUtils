@@ -5,9 +5,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
-import android.text.TextUtils;
-
-import org.w3c.dom.Text;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -62,7 +59,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                             //上传
                             if (iReportEx!=null) {
                                 if (!SpUtils.getInstance().getBoolean(mContext,_name,true)) {
-                                    iReportEx.report2Server(_name, FileUtils.getInstance().readFileSdcardFile(filePath));
+                                    iReportEx.report2Server(_name, FileUtilsTemp.getInstance().readFileSdcardFile(filePath));
                                 }
                             }
                     }
