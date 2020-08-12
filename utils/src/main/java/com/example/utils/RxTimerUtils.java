@@ -2,6 +2,8 @@ package com.example.utils;
 
 import android.util.Log;
 
+import com.example.utils.InterfaceImp.SimpleObserver;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,141 +18,83 @@ import io.reactivex.schedulers.Schedulers;
 
 // TODO: 2019/11/13 该类待优化
 public class RxTimerUtils {
-    private List<Disposable> mDisposableList;
-    private boolean isDebug = false;
-    private String TAG = "RxTimerUtils";
+
+    private String TAG =this.getClass().getSimpleName();
 
     private static class RxTimerUtilsHolder {
         private static final RxTimerUtils INSTANCE = new RxTimerUtils();
     }
-
     private RxTimerUtils() {
-        mDisposableList = new ArrayList<>();
     }
 
     public static final RxTimerUtils getInstance() {
         return RxTimerUtilsHolder.INSTANCE;
     }
 
-
-    public void setDebug(Boolean isDebug) {
-        this.isDebug = isDebug;
-    }
-
-    /**
-     * 每隔milliseconds毫秒后执行next操作
-     *
-     * @param milliseconds
-     * @param next
-     */
-    public void interval(long milliseconds, final IRxNext next) {
-        Observable.interval(milliseconds, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Long>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable disposable) {
-                        Log.d(TAG, "onSubscribe: ");
-                        mDisposableList.add(disposable);
-                    }
-
-                    @Override
-                    public void onNext(@NonNull Long number) {
-                        if (next != null) {
-                            next.doNext(number);
-                        }
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-    }
-
-    /**
-     * 每隔milliseconds毫秒后执行next操作
-     *
-     * @param delay        第一次延迟时间
-     * @param milliseconds 周期
-     * @param next         结果回调
-     */
-    public void interval(long delay, long milliseconds, final IRxNext next) {
-        Observable.interval(delay, milliseconds, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Long>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable disposable) {
-                        Log.d(TAG, "onSubscribe: ");
-                        mDisposableList.add(disposable);
-                    }
-
-                    @Override
-                    public void onNext(@NonNull Long number) {
-                        if (next != null) {
-                            next.doNext(number);
-                        }
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-    }
-
     HashMap<String, Disposable> hashMap = new HashMap<>();
 
-    public void interval(long milliseconds, final IRxNext next, final String mTag) {
-        Observable.interval(milliseconds, TimeUnit.MILLISECONDS)
+    /**
+     * 间隔时间执行某个操作
+     * @param delay 延迟执行的时间 毫秒
+     * @param period 周期 毫秒
+     * @param next 回调函数
+     * @param mTag 唯一标识
+     */
+    public void interval(long delay,long period, final IRxNext next, final String mTag) {
+        Observable.interval(delay,period, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Long>() {
+                .subscribe(new SimpleObserver<Long>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable disposable) {
-                        Log.d(TAG, "onSubscribe: ");
-                        hashMap.put(mTag, disposable);
+                        super.onSubscribe(disposable);
+                        if(!disposable.isDisposed()){
+                            hashMap.put(mTag, disposable);
+                        }else{
+                            LogUtil.d(TAG,"disposable被取消");
+                        }
                     }
-
                     @Override
                     public void onNext(@NonNull Long number) {
+                        super.onNext(number);
                         if (next != null) {
                             next.doNext(number);
                         }
                     }
-
+                });
+    }
+    /**
+     * 延迟执行一次
+     * @param delay 延迟时间 ms
+     * @param iRxNext 回调
+     * @param mTag 唯一标识
+     */
+    public void onlyOneDelay(long delay, final IRxNext iRxNext, final String mTag) {
+        Observable.just("onlyOne")
+                .delay(delay, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SimpleObserver<String>(){
                     @Override
-                    public void onError(@NonNull Throwable e) {
-
+                    public void onSubscribe(Disposable disposable) {
+                        super.onSubscribe(disposable);
+                        if(!disposable.isDisposed()){
+                            hashMap.put(mTag, disposable);
+                        }
                     }
-
                     @Override
-                    public void onComplete() {
-
+                    public void onNext(String s) {
+                        super.onNext(s);
+                        if(iRxNext!=null){
+                            iRxNext.doNext(1);
+                        }
                     }
                 });
     }
-
     /**
      * 取消订阅
      */
     public void cancelAll() {
         try {
-            for (Disposable disposable : mDisposableList) {
-                if (disposable != null && !disposable.isDisposed()) {
-                    disposable.dispose();
-                    Log.d(TAG, "cancelAll");
-                }
-            }
-            mDisposableList.clear();
             if (hashMap.keySet() != null) {
                 for (String key : hashMap.keySet()) {
                     Disposable disposable = hashMap.get(key);
@@ -183,42 +127,6 @@ public class RxTimerUtils {
         }
     }
 
-    /**
-     * 延迟执行一次
-     * @param des 传递的描述信息
-     * @param s 秒
-     */
-    public void delay(String des, int s, final IRxNext iRxNext, final String mTag) {
-        Observable.just(des)
-                //延时两秒，第一个参数是数值，第二个参数是事件单位
-                .delay(s, TimeUnit.SECONDS)
-                // Run on a background thread
-                .subscribeOn(Schedulers.io())
-                // Be notified on the main thread
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<String>(){
-
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        hashMap.put(mTag, d);
-                    }
-
-                    @Override
-                    public void onNext(String s) {
-                        iRxNext.doNext(1);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-    }
 
     public interface IRxNext {
         void doNext(long number);
