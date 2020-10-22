@@ -86,6 +86,10 @@ public class RxTimerUtils {
                     @Override
                     public void onSubscribe(@NonNull Disposable disposable) {
                         Log.d(TAG, "onSubscribe: ");
+                        Disposable pre= hashMap.get(mTag);
+                        if(pre!=null&&!pre.isDisposed()){
+                            pre.dispose();
+                        }
                         if(!disposable.isDisposed()){
                             hashMap.put(mTag, disposable);
                         }else{
