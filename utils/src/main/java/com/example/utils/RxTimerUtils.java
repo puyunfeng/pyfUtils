@@ -73,6 +73,46 @@ public class RxTimerUtils {
     }
 
     /**
+     * 间隔时间执行某个操作
+     * @param delay 延迟执行的时间 毫秒
+     * @param period 周期 毫秒
+     * @param next 回调函数
+     * @param mTag 唯一标识
+     */
+    public void interval(long delay,long period, final IRxNext next, final String mTag) {
+        Observable.interval(delay, period, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Long>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable disposable) {
+                        Log.d(TAG, "onSubscribe: ");
+                        if(!disposable.isDisposed()){
+                            hashMap.put(mTag, disposable);
+                        }else{
+                            LogUtil.d(TAG,"disposable被取消");
+                        }
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Long number) {
+                        if (next != null) {
+                            next.doNext(number);
+                        }
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+    }
+    /**
      * 每隔milliseconds毫秒后执行next操作
      *
      * @param delay        第一次延迟时间
