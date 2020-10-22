@@ -47,6 +47,7 @@ public class RxTimerUtils {
                     @Override
                     public void onSubscribe(@NonNull Disposable disposable) {
                         super.onSubscribe(disposable);
+                        cancePre(mTag);
                         if(!disposable.isDisposed()){
                             hashMap.put(mTag, disposable);
                         }else{
@@ -62,6 +63,18 @@ public class RxTimerUtils {
                     }
                 });
     }
+
+    /**
+     * 取消之前未被关闭掉的定时器
+     * @param mTag
+     */
+    private void cancePre(String mTag) {
+        Disposable pre= hashMap.get(mTag);
+        if(pre!=null&&!pre.isDisposed()){
+            pre.dispose();
+        }
+    }
+
     /**
      * 延迟执行一次
      * @param delay 延迟时间 ms
@@ -77,6 +90,7 @@ public class RxTimerUtils {
                     @Override
                     public void onSubscribe(Disposable disposable) {
                         super.onSubscribe(disposable);
+                        cancePre(mTag);
                         if(!disposable.isDisposed()){
                             hashMap.put(mTag, disposable);
                         }
